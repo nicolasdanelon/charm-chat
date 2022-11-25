@@ -11,7 +11,7 @@ function ChatTopBar() {
         <div className="relative">
           <input type="search" placeholder="Search"
                  className="appearance-none border border-grey rounded-lg pl-8 pr-4 py-2" />
-            <div className="absolute pin-y pin-l pl-3 flex items-center justify-center">
+            <div className="absolute pin-y pin-l pl-3 flex items-center justify-center" style={{ top: 13 }}>
               <svg className="fill-current text-grey h-4 w-4" xmlns="http://www.w3.org/2000/svg"
                    viewBox="0 0 20 20">
                 <path
