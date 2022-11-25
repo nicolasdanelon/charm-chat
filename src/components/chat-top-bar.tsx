@@ -4,7 +4,7 @@ function ChatTopBar() {
       <div className="flex flex-col">
         <h3 className="text-grey-darkest mb-1 font-extrabold">#general</h3>
         <div className="text-grey-dark text-sm truncate">
-          Chit-chattin' about ugly HTML and mixing of concerns.
+          If his destiny be strange, it is also sublime.
         </div>
       </div>
       <div className="ml-auto hidden md:block">

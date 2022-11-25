@@ -29,7 +29,7 @@ function Sidebar() {
       <div className="bg-indigo-darker text-purple-lighter flex-none w-64 pb-6 hidden md:block">
         <div className="text-white mb-2 mt-3 px-4 flex justify-between">
           <div className="flex-auto">
-            <h1 className="font-semibold text-xl leading-tight mb-1 truncate">Tailwind CSS</h1>
+            <h1 className="font-semibold text-xl leading-tight mb-1 truncate">Charm chat</h1>
             <div className="flex items-center mb-6">
               <svg className="h-2 w-2 fill-current text-green mr-2" viewBox="0 0 20 20">
                 <circle cx="10" cy="10" r="10" />
