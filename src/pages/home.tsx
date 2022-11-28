@@ -1,5 +1,5 @@
-import Sidebar from "../components/sidebar";
-import Chats from "../components/chats";
+import Sidebar from "../components/sidebar"
+import Chats from "../components/chats"
 
 function Home() {
   return (
@@ -7,7 +7,7 @@ function Home() {
       <Sidebar />
       <Chats />
     </>
-  );
+  )
 }
 
-export default Home;
+export default Home

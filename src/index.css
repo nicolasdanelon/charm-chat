@@ -3,29 +3,29 @@
 @tailwind utilities;
 
 .bg-indigo-darkest {
-    background-color: #191e38;
+  background-color: #191e38;
 }
 .bg-indigo-darker {
-    background-color: #2f365f;
+  background-color: #2f365f;
 }
 .bg-indigo-lighter {
-    background-color: #b2b7ff;
+  background-color: #b2b7ff;
 }
 .bg-teal-dark {
-    background-color: #38a89d;
+  background-color: #38a89d;
 }
 .text-green {
-    color: #38c172;
+  color: #38c172;
 }
 .text-xs {
-    font-size: .75rem;
+  font-size: 0.75rem;
 }
 .text-grey {
-    color: #9babb4;
+  color: #9babb4;
 }
 .text-blue {
-    color: #3490dc;
+  color: #3490dc;
 }
 .bg-blue-lightest {
-    background-color: #eff8ff;
+  background-color: #eff8ff;
 }

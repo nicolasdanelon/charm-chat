@@ -1,6 +1,6 @@
-import ChatTopBar from "./chat-top-bar";
-import Messages from "./messages";
-import MessageComposer from "./message-composer";
+import ChatTopBar from "./chat-top-bar"
+import Messages from "./messages"
+import MessageComposer from "./message-composer"
 
 function Chats() {
   return (
@@ -12,4 +12,4 @@ function Chats() {
   )
 }
 
-export default Chats;
+export default Chats
