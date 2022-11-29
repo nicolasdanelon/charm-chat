@@ -7,6 +7,7 @@ function Login() {
   const [email, setEmail] = useState("")
 
   const handleLogin = async (e: EventTarget) => {
+    // @ts-ignore
     e.preventDefault()
 
     try {
@@ -14,6 +15,7 @@ function Login() {
       const { error } = await supabase.auth.signInWithOtp({ email })
       // @ts-ignore
     } catch (error) {
+      // @ts-ignore
       alert(error.error_description || error.message)
     } finally {
       setLoading(false)
@@ -49,7 +51,10 @@ function Login() {
                     className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                     placeholder="Charmer address"
                     value={email}
-                    onChange={(e) => setEmail(e?.target.value)}
+                    onChange={(event) => {
+                      const v = (event.target as HTMLInputElement).value
+                      setEmail(v)
+                    }}
                   />
                 </div>
 
