@@ -1,4 +1,6 @@
-function Sidebar() {
+import { h } from "preact"
+
+function Sidebar({ userName }: { userName: string }) {
   return (
     <>
       <div className="bg-indigo-darkest text-purple-lighter flex-none p-4 hidden md:block">
@@ -43,7 +45,7 @@ function Sidebar() {
               >
                 <circle cx="10" cy="10" r="10" />
               </svg>
-              <span className="text-white opacity-50 text-sm">Adam Wathan</span>
+              <span className="text-white opacity-50 text-sm">{userName}</span>
             </div>
           </div>
           <div>
@@ -94,7 +96,7 @@ function Sidebar() {
               <circle cx="10" cy="10" r="10" />
             </svg>
             <span className="text-white opacity-75">
-              Adam Wathan <span className="text-grey text-sm">(you)</span>
+              {userName} <span className="text-grey text-sm">(you)</span>
             </span>
           </div>
           <div className="flex items-center mb-3 px-4">
