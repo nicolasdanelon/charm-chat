@@ -1,29 +1,110 @@
-import { useState } from "preact/compat"
+import { h } from "preact"
+import { useEffect, useState } from "preact/compat"
 import { supabase } from "../supabaseClient"
+import { useNavigate } from "react-router-dom"
+import Toast from "../components/toast"
+import useUserStore from "../stores/useUserStore"
+
+type FormData = {
+  error: string
+  email: string
+  password: string
+}
 
 function Login() {
   // https://tailwind-elements.com/docs/standard/components/login-form/
-  const [loading, setLoading] = useState(false)
-  const [email, setEmail] = useState("")
+  const [formData, setFormData] = useState<FormData>({
+    error: "",
+    email: "",
+    password: "",
+  })
 
-  const handleLogin = async (e: EventTarget) => {
-    // @ts-ignore
-    e.preventDefault()
+  const [_, setLoading] = useState<boolean>(false)
+
+  const handleChange = (key: keyof FormData) => (e: any) => {
+    const v = e.target.value
+    setFormData({
+      ...formData,
+      [key]: v,
+    })
+  }
+
+  const navigate = useNavigate()
+  const { setUser } = useUserStore()
+
+  const handleSignUp = async () => {
+    const { email } = formData
+
+    if (!email.trim().match(/\w+@conjure\.co\.uk$/)) {
+      setFormData({ ...formData, error: "Only conjured emails allowed." })
+      return
+    }
 
     try {
       setLoading(true)
-      const { error } = await supabase.auth.signInWithOtp({ email })
+      setFormData({ ...formData, error: "" })
+      const { error: signUpError, data } = await supabase.auth.signUp(formData)
+
+      console.log({ signUpError, data })
+      if (signUpError) {
+        setFormData({ ...formData, error: signUpError.message })
+      }
+
+      if (data.session && data.user) {
+        const name = email?.toLowerCase().split("@")[0].split(".").join(" ")
+        setUser({ id: data.user.id, email, name })
+        navigate("/app")
+      }
+    } catch (err) {
       // @ts-ignore
-    } catch (error) {
-      // @ts-ignore
-      alert(error.error_description || error.message)
+      setFormData({ ...formData, error: err.error_description || err.message })
     } finally {
       setLoading(false)
     }
   }
 
+  const handleLogin = async (e: any) => {
+    // @ts-ignore
+    e.preventDefault()
+    const { email, password } = formData
+
+    if (!email.trim().match(/\w+@conjure\.co\.uk$/)) {
+      setFormData({ ...formData, error: "Only conjured emails allowed." })
+      return
+    }
+
+    try {
+      setLoading(true)
+      const { error: signInError, data } =
+        await supabase.auth.signInWithPassword({
+          email,
+          password,
+        })
+      console.log({ signInError, data })
+
+      if (signInError) {
+        setFormData({ ...formData, error: signInError?.message ?? "Error" })
+      }
+
+      if (data.session && data.user) {
+        const name = email?.toLowerCase().split("@")[0].split(".").join(" ")
+        setUser({ id: data.user.id, email, name })
+        navigate("/app")
+      }
+    } catch (err) {
+      console.log(err)
+      // @ts-ignore
+      alert(err.error_description || err.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const { email, password, error } = formData
+
   return (
     <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+      {formData.error && <Toast message={error} />}
       <section className="h-screen">
         <div className="container px-6 py-12 h-full">
           <a
@@ -44,17 +125,14 @@ function Login() {
                 Welcome back dear charmer ✨
               </h1>
               <p className="pb-5">Only charmed accounts can access 🧙‍</p>
-              <form>
+              <form onSubmit={handleLogin}>
                 <div className="mb-6">
                   <input
                     type="text"
                     className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                     placeholder="Charmer address"
                     value={email}
-                    onChange={(event) => {
-                      const v = (event.target as HTMLInputElement).value
-                      setEmail(v)
-                    }}
+                    onChange={handleChange("email")}
                   />
                 </div>
 
@@ -63,6 +141,8 @@ function Login() {
                     type="password"
                     className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                     placeholder="Password"
+                    value={password}
+                    onChange={handleChange("password")}
                   />
                 </div>
 
@@ -89,14 +169,26 @@ function Login() {
                   </a>
                 </div>
 
-                <button
-                  type="submit"
-                  className="inline-block px-7 py-3 bg-blue-600 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out w-full"
-                  data-mdb-ripple="true"
-                  data-mdb-ripple-color="light"
-                >
-                  Sign in
-                </button>
+                <div className="flex">
+                  <button
+                    type="submit"
+                    className="mr-1 px-7 py-3 bg-blue-600 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out w-full"
+                    data-mdb-ripple="true"
+                    data-mdb-ripple-color="light"
+                    disabled={password.length < 1}
+                  >
+                    Sign in
+                  </button>
+                  <button
+                    type="button"
+                    className="ml-1 px-7 py-3 bg-red-600 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:bg-red-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out w-full"
+                    data-mdb-ripple="true"
+                    data-mdb-ripple-color="light"
+                    onClick={handleSignUp}
+                  >
+                    Sign up
+                  </button>
+                </div>
 
                 <div className="flex items-center my-4 before:flex-1 before:border-t before:border-gray-300 before:mt-0.5 after:flex-1 after:border-t after:border-gray-300 after:mt-0.5">
                   <p className="text-center font-semibold mx-4 mb-0">OR</p>

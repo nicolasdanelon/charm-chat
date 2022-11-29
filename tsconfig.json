@@ -15,7 +15,9 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "jsxImportSource": "preact"
+    "jsxFactory": "h",
+    "jsxImportSource": "preact",
+    "jsxFragmentFactory": "React.Fragment"
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
