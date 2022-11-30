@@ -1,16 +1,18 @@
-import { Routes, Route, useNavigate } from "react-router-dom"
+import { h } from "preact"
+import { Routes, Route } from "react-router-dom"
 import Layout from "./components/layout"
 import App from "./pages/app"
 import Login from "./pages/login"
-import { h } from "preact"
 import Authenticated from "./components/authenticated"
 import NotAuthenticated from "./components/not-authenticated"
 import Logout from "./pages/logout"
+import Index from "./pages"
 
 export function Root() {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
+        <Route path="/" element={<Index />} />
         <Route
           path="/app"
           element={
