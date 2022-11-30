@@ -1,5 +1,5 @@
 import { h } from "preact"
-import { useState } from "preact/compat"
+import { useEffect, useState } from "preact/compat"
 import { supabase } from "../supabaseClient"
 import { useNavigate } from "react-router-dom"
 import Lottie from "lottie-react"
@@ -100,6 +100,17 @@ function Login() {
   }
 
   const { email, password, error, show } = formData
+
+  useEffect(() => {
+    if (error) {
+      const timeout = setTimeout(() => {
+        setFormData({ ...formData, error: "" })
+      }, 2000)
+      return () => {
+        clearTimeout(timeout)
+      }
+    }
+  }, [error])
 
   return (
     <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
