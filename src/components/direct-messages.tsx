@@ -5,7 +5,9 @@ export default function DirectMessages({ userName }: { userName: string }) {
   const { charmers, getCharmers } = useCharmersStore()
 
   useEffect(() => {
-    getCharmers()
+    ;(async () => {
+      await getCharmers()
+    })()
   }, [])
 
   return (
@@ -35,10 +37,13 @@ export default function DirectMessages({ userName }: { userName: string }) {
       </div>
 
       {charmers.map((charmer) => (
-        <div className="flex items-center px-4 mb-6 opacity-50">
+        <div
+          className="flex items-center px-4 mb-6 opacity-50"
+          key={charmer.id}
+        >
           <svg
-            className={`h-2 w-2 stroke-current ${
-              charmer.is_online ? "text-green" : "text-white"
+            className={`h-2 w-2 stroke-current text-${
+              charmer.is_online ? "green" : "white"
             } mr-2`}
             viewBox="0 0 22 22"
           >
