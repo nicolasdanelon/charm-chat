@@ -1,16 +1,18 @@
 import { h } from "preact"
-import { useEffect, useState } from "preact/compat"
+import { useState } from "preact/compat"
 import { supabase } from "../supabaseClient"
 import { useNavigate } from "react-router-dom"
 import Lottie from "lottie-react"
 import envelopeAnimation from "../assets/envelope-animation.json"
 import Toast from "../components/toast"
 import useUserStore from "../stores/useUserStore"
+import Loading from "../components/loading"
 
 type FormData = {
   error: string
   email: string
   password: string
+  show: boolean
 }
 
 function Login() {
@@ -19,10 +21,10 @@ function Login() {
     error: "",
     email: "",
     password: "",
+    show: true,
   })
 
-  const [_, setLoading] = useState<boolean>(false)
-  const [showForm, setShowForm] = useState<boolean>(true)
+  const [loading, setLoading] = useState<boolean>(false)
 
   const handleChange = (key: keyof FormData) => (e: any) => {
     const v = e.target.value
@@ -52,7 +54,7 @@ function Login() {
       if (signUpError) {
         setFormData({ ...formData, error: signUpError.message })
       } else {
-        setShowForm(false)
+        setFormData({ ...formData, show: false })
       }
     } catch (err) {
       // @ts-ignore
@@ -79,7 +81,6 @@ function Login() {
           email,
           password,
         })
-      console.log({ signInError, data })
 
       if (signInError) {
         setFormData({ ...formData, error: signInError?.message ?? "Error" })
@@ -91,15 +92,14 @@ function Login() {
         navigate("/app")
       }
     } catch (err) {
-      console.log(err)
       // @ts-ignore
-      alert(err.error_description || err.message)
+      setFormData({ ...formData, error: err.error_description || err.message })
     } finally {
       setLoading(false)
     }
   }
 
-  const { email, password, error } = formData
+  const { email, password, error, show } = formData
 
   return (
     <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
@@ -119,7 +119,7 @@ function Login() {
                 alt="Phone image"
               />
             </div>
-            {showForm ? (
+            {show ? (
               <div className="md:w-8/12 lg:w-5/12 lg:ml-20">
                 <h1 className="text-xl font-bold leading-tight tracking-tight text-white md:text-2xl dark:text-gray-900 pb-3">
                   Welcome back dear charmer ✨
@@ -148,7 +148,7 @@ function Login() {
 
                   <div className="flex justify-between items-center mb-6">
                     <a
-                      href="#!"
+                      href="#"
                       className="text-blue-600 hover:text-blue-700 focus:text-blue-700 active:text-blue-800 duration-200 transition ease-in-out"
                     >
                       Forgot password?
@@ -163,7 +163,13 @@ function Login() {
                       data-mdb-ripple-color="light"
                       disabled={password.length < 1}
                     >
-                      Sign in
+                      {loading ? (
+                        <span className="grid place-items-center">
+                          <Loading />
+                        </span>
+                      ) : (
+                        "Sign in"
+                      )}
                     </button>
                     <button
                       type="button"
@@ -172,7 +178,13 @@ function Login() {
                       data-mdb-ripple-color="light"
                       onClick={handleSignUp}
                     >
-                      Sign up
+                      {loading ? (
+                        <span className="grid place-items-center">
+                          <Loading />
+                        </span>
+                      ) : (
+                        "Sign up"
+                      )}
                     </button>
                   </div>
 
