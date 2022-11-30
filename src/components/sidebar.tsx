@@ -47,7 +47,9 @@ function Sidebar({ userName }: { userName: string }) {
               >
                 <circle cx="10" cy="10" r="10" />
               </svg>
-              <span className="text-white opacity-50 text-sm">{userName}</span>
+              <span className="text-white opacity-50 text-sm capitalize">
+                {userName}
+              </span>
             </div>
           </div>
           <div>
@@ -83,7 +85,7 @@ function Sidebar({ userName }: { userName: string }) {
             >
               <circle cx="10" cy="10" r="10" />
             </svg>
-            <span className="text-white opacity-75">
+            <span className="text-white opacity-75 capitalize">
               {userName} <span className="text-grey text-sm">(you)</span>
             </span>
           </div>
