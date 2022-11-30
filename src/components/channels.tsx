@@ -1,24 +1,13 @@
 import { h } from "preact"
-import { useEffect, useState } from "preact/hooks"
+import { useEffect } from "preact/hooks"
 
-import { supabase } from "../supabaseClient"
-
-type Channel = {
-  id: string
-  name: string
-}
+import useChannelsStore from "../stores/useChannelsStore"
 
 export default function Channels() {
-  const [channels, setChannels] = useState<Channel[]>([])
+  const { channels, getChannels } = useChannelsStore()
 
   useEffect(() => {
-    ;(async () => {
-      const { data, error } = await supabase.from("channels").select("*")
-
-      if (error) console.error(error)
-
-      if (data) setChannels(data)
-    })()
+    getChannels()
   }, [])
 
   return (
