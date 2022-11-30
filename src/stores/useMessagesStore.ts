@@ -5,6 +5,11 @@ import { supabase } from "../supabaseClient"
 export type Message = {
   id: string
   content: string
+  channel_id: number | null
+  conversation_id: number | null
+  is_read: boolean
+  charmer_id: string
+  created_at: Date
 }
 
 type MessagesStore = {
