@@ -9,6 +9,7 @@ export type Channel = {
 
 type ChannelsStore = {
   channels: Channel[]
+  clearChannels: () => void
   getChannels: () => Promise<void>
 }
 
@@ -16,6 +17,7 @@ const useChannelsStore = create<ChannelsStore>()(
   persist(
     (set) => ({
       channels: [],
+      clearChannels: () => set({ channels: [] }),
       getChannels: async () => {
         const { data: channels, error } = await supabase
           .from("channels")
