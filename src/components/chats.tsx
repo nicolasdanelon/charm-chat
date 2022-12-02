@@ -6,7 +6,7 @@ function Chats() {
   return (
     <div className="flex-1 flex flex-col bg-white overflow-hidden">
       <ChatTopBar />
-      <Messages />
+      <Messages channelId={1} />
       <MessageComposer />
     </div>
   )
