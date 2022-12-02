@@ -11,6 +11,7 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.1.1",
     "autoprefixer": "^10.4.13",
+    "lottie-react": "^2.3.1",
     "postcss": "^8.4.19",
     "preact": "^10.11.2",
     "react-router-dom": "^6.4.3",
