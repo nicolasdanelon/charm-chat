@@ -39,7 +39,8 @@ function Messages({ channelId }: MessagesProps) {
         .eq("channel_id", channelId)
 
       if (error) console.error(error)
-      if (messages) setMessages(messages)
+
+      setMessages(messages!)
     })()
   }, [])
 
