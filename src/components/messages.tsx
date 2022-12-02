@@ -83,10 +83,6 @@ function Messages({ channelId }: MessagesProps) {
     }
   }, [channelId])
 
-  useEffect(() => {
-    console.log(messages)
-  }, [messages])
-
   return (
     <div className="px-6 py-4 flex-1 overflow-y-scroll">
       {messages.map((message) => (
