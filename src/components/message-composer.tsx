@@ -8,14 +8,14 @@ type MessageComposerType = {
 }
 
 function MessageComposer({ channelId, charmerId }: MessageComposerType) {
-  const [content, setContent] = useState<string>()
+  const [content, setContent] = useState<string>("")
 
   const handleChange = (event: any) => {
     setContent(event.currentTarget.value)
   }
 
   const handleKeyPress = async (event: { key: string }) => {
-    if (event.key === "Enter") {
+    if (event.key === "Enter" && content.trim().length) {
       const { error } = await supabase
         .from("messages")
         .insert({ channel_id: channelId, charmer_id: charmerId, content })
