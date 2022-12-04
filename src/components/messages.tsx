@@ -26,7 +26,7 @@ function Messages({ channelId }: MessagesProps) {
 
   useEffect(() => {
     ;(async () => {
-      const { data: messages, error } = await supabase
+      const { data, error } = await supabase
         .from("messages")
         .select(
           `
@@ -36,11 +36,11 @@ function Messages({ channelId }: MessagesProps) {
           )
         `
         )
+        .order("created_at")
         .eq("channel_id", channelId)
 
       if (error) console.error(error)
-
-      setMessages(messages!)
+      if (data) setMessages(data)
     })()
   }, [])
 
@@ -71,7 +71,7 @@ function Messages({ channelId }: MessagesProps) {
               charmers: charmers!.pop()!,
             }
 
-            setMessages([...messages, newMessage])
+            setMessages((messages) => [...messages, newMessage])
           }
         )
         .subscribe()
@@ -86,7 +86,7 @@ function Messages({ channelId }: MessagesProps) {
 
   return (
     <div className="px-6 py-4 flex-1 overflow-y-scroll">
-      {messages.map((message) => (
+      {messages?.map((message) => (
         <Message
           content={message.content}
           name={message.charmers.name}
