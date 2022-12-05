@@ -13,10 +13,10 @@ export default function Channels() {
   return (
     <div className="mb-8">
       <div className="px-4 mb-2 text-white flex justify-between items-center">
-        <div className="opacity-75">Channels</div>
+        <div className="opacity-75 cursor-default">Channels</div>
         <div>
           <svg
-            className="fill-current h-4 w-4 opacity-50"
+            className="fill-current h-4 w-4 opacity-50 cursor-pointer"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
           >
@@ -25,7 +25,10 @@ export default function Channels() {
         </div>
       </div>
       {channels.map(({ id, name }) => (
-        <div key={id} className="bg-teal-dark py-1 px-4 text-white">
+        <div
+          key={id}
+          className="bg-teal-dark py-1 px-4 text-white cursor-pointer"
+        >
           # {name}
         </div>
       ))}

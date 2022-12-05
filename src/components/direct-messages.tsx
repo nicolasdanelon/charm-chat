@@ -13,10 +13,10 @@ export default function DirectMessages({ userName }: { userName: string }) {
   return (
     <div className="mb-8">
       <div className="px-4 mb-2 text-white flex justify-between items-center">
-        <div className="opacity-75">Direct Messages</div>
+        <div className="opacity-75 cursor-default">Direct Messages</div>
         <div>
           <svg
-            className="fill-current h-4 w-4 opacity-50"
+            className="fill-current h-4 w-4 opacity-50 cursor-pointer"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
           >
@@ -36,22 +36,25 @@ export default function DirectMessages({ userName }: { userName: string }) {
         </span>
       </div>
 
-      {charmers.map((charmer) => (
-        <div
-          className="flex items-center px-4 mb-6 opacity-50"
-          key={charmer.id}
-        >
-          <svg
-            className={`h-2 w-2 stroke-current text-${
-              charmer.is_online ? "green" : "white"
-            } mr-2`}
-            viewBox="0 0 22 22"
+      {charmers.map((charmer, index) => {
+        const margin = `mb-${charmers.length === index + 1 ? 6 : 3}`
+        const color = `text-${charmer.is_online ? "green" : "white"}`
+
+        return (
+          <div
+            className={`flex items-center py-1 px-4 ${margin} opacity-50 cursor-pointer hover:bg-teal-500 hover:opacity-100`}
+            key={charmer.id}
           >
-            <circle cx="11" cy="11" r="9" fill="none" stroke-width="3" />
-          </svg>
-          <span className="text-white capitalize">{charmer.name}</span>
-        </div>
-      ))}
+            <svg
+              className={`h-2 w-2 stroke-current ${color} mr-2`}
+              viewBox="0 0 22 22"
+            >
+              <circle cx="11" cy="11" r="9" fill="none" stroke-width="3" />
+            </svg>
+            <span className="text-white capitalize">{charmer.name}</span>
+          </div>
+        )
+      })}
     </div>
   )
 }

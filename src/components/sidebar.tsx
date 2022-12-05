@@ -38,7 +38,7 @@ function Sidebar({ userName }: { userName: string }) {
       <div className="bg-indigo-darker text-purple-lighter flex-none w-64 pb-6 hidden md:block">
         <div className="text-white mb-2 mt-3 px-4 flex justify-between">
           <div className="flex-auto">
-            <h1 className="font-semibold text-xl leading-tight mb-1 truncate">
+            <h1 className="font-semibold text-xl leading-tight mb-1 truncate cursor-default">
               Charm chat
             </h1>
             <div className="flex items-center mb-6">
@@ -48,14 +48,14 @@ function Sidebar({ userName }: { userName: string }) {
               >
                 <circle cx="10" cy="10" r="10" />
               </svg>
-              <span className="text-white opacity-50 text-sm capitalize">
+              <span className="text-white opacity-50 text-sm capitalize cursor-default">
                 {userName}
               </span>
             </div>
           </div>
           <div>
             <svg
-              className="h-6 w-6 fill-current text-white opacity-25"
+              className="h-6 w-6 fill-current text-white opacity-25 cursor-pointer"
               viewBox="0 0 20 20"
             >
               <path
@@ -69,10 +69,10 @@ function Sidebar({ userName }: { userName: string }) {
         <DirectMessages userName={userName} />
         <div>
           <div className="px-4 mb-2 text-white flex justify-between items-center">
-            <div className="opacity-75">Apps</div>
+            <div className="opacity-75 cursor-default">Apps</div>
             <div>
               <svg
-                className="fill-current h-4 w-4 opacity-50"
+                className="fill-current h-4 w-4 opacity-50 cursor-pointer"
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20"
               >

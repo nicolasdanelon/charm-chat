@@ -13,7 +13,7 @@ function Message({ name, content, time }: MessageProps) {
       />
       <div className="flex-1 overflow-hidden">
         <div>
-          <span className="font-bold">{name}</span>{" "}
+          <span className="font-bold capitalize">{name}</span>{" "}
           <span className="text-grey text-xs">
             {time.toDateString()} {time.toLocaleTimeString()}
           </span>
