@@ -4,7 +4,8 @@ import { useEffect } from "preact/hooks"
 import useChannelsStore from "../stores/useChannelsStore"
 
 export default function Channels() {
-  const { channels, getChannels } = useChannelsStore()
+  const { channels, getChannels, currentChannelId, setCurrentChannelId } =
+    useChannelsStore()
 
   useEffect(() => {
     getChannels()
@@ -24,12 +25,21 @@ export default function Channels() {
           </svg>
         </div>
       </div>
+
       {channels.map(({ id, name }) => (
         <div
           key={id}
-          className="bg-teal-dark py-1 px-4 text-white cursor-pointer"
+          className={`bg-${
+            currentChannelId === Number(id) ? "teal-dark" : "none"
+          } py-1 px-4 text-white cursor-pointer`}
         >
-          # {name}
+          <button
+            onClick={() => {
+              setCurrentChannelId(Number(id))
+            }}
+          >
+            # {name}
+          </button>
         </div>
       ))}
     </div>
