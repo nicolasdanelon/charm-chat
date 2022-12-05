@@ -1,4 +1,31 @@
-function MessageComposer() {
+import { useState } from "preact/hooks"
+
+import { supabase } from "../supabaseClient"
+
+type MessageComposerType = {
+  channelId: number
+  charmerId: string
+}
+
+function MessageComposer({ channelId, charmerId }: MessageComposerType) {
+  const [content, setContent] = useState<string>("")
+
+  const handleChange = (event: any) => {
+    setContent(event.currentTarget.value)
+  }
+
+  const handleKeyPress = async (event: { key: string }) => {
+    if (event.key === "Enter" && content.trim().length) {
+      const { error } = await supabase
+        .from("messages")
+        .insert({ channel_id: channelId, charmer_id: charmerId, content })
+
+      if (error) console.error(error)
+
+      setContent("")
+    }
+  }
+
   return (
     <div className="pb-6 px-4 flex-none">
       <div className="flex rounded-lg border-2 border-grey overflow-hidden">
@@ -15,6 +42,9 @@ function MessageComposer() {
           type="text"
           className="w-full px-4"
           placeholder="Message #general"
+          value={content}
+          onChange={handleChange}
+          onKeyPressCapture={handleKeyPress}
         />
       </div>
     </div>
