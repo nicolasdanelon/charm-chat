@@ -44,7 +44,6 @@ function Messages() {
   }, [currentChannelId])
 
   useEffect(() => {
-    if (channel) supabase.removeChannel(channel)
     ;(async () => {
       const c = supabase
         .channel(`public:messages:channel_id=eq.${currentChannelId}`)
