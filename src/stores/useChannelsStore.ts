@@ -10,9 +10,11 @@ export type Channel = {
 type ChannelsStore = {
   channels: Channel[]
   currentChannelId: number | null
+  currentChannelName: string
   clearChannels: () => void
   getChannels: () => Promise<void>
   setCurrentChannelId: (c: number) => void
+  setCurrentChannelName: (n: string) => void
 }
 
 const useChannelsStore = create<ChannelsStore>()(
@@ -21,6 +23,7 @@ const useChannelsStore = create<ChannelsStore>()(
       channels: [],
       clearChannels: () => set({ channels: [] }),
       currentChannelId: 1,
+      currentChannelName: "",
       getChannels: async () => {
         const { data: channels, error } = (await supabase
           .from("channels")
@@ -31,6 +34,8 @@ const useChannelsStore = create<ChannelsStore>()(
       },
       setCurrentChannelId: (currentChannelId: number) =>
         set({ currentChannelId }),
+      setCurrentChannelName: (currentChannelName: string) =>
+        set({ currentChannelName }),
     }),
     { name: "channelsStorage" }
   )

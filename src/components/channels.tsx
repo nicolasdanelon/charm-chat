@@ -4,8 +4,13 @@ import { useEffect } from "preact/hooks"
 import useChannelsStore from "../stores/useChannelsStore"
 
 export default function Channels() {
-  const { channels, getChannels, currentChannelId, setCurrentChannelId } =
-    useChannelsStore()
+  const {
+    channels,
+    getChannels,
+    currentChannelId,
+    setCurrentChannelId,
+    setCurrentChannelName,
+  } = useChannelsStore()
 
   useEffect(() => {
     getChannels()
@@ -36,6 +41,7 @@ export default function Channels() {
           <button
             onClick={() => {
               setCurrentChannelId(Number(id))
+              setCurrentChannelName(name)
             }}
           >
             # {name}
