@@ -44,39 +44,37 @@ function Messages() {
   }, [currentChannelId])
 
   useEffect(() => {
-    ;(async () => {
-      const c = supabase
-        .channel(`public:messages:channel_id=eq.${currentChannelId}`)
-        .on(
-          "postgres_changes",
-          {
-            event: "INSERT",
-            schema: "public",
-            table: "messages",
-            filter: `channel_id=eq.${currentChannelId}`,
-          },
-          async (payload) => {
-            const { data: charmers, error } = (await supabase
-              .from("charmers")
-              .select("name")
-              .eq("id", payload.new.charmer_id)) as PostgrestResponse<{
-              name: string
-            }>
+    const c = supabase
+      .channel(`public:messages:channel_id=eq.${currentChannelId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "messages",
+          filter: `channel_id=eq.${currentChannelId}`,
+        },
+        async (payload) => {
+          const { data: charmers, error } = (await supabase
+            .from("charmers")
+            .select("name")
+            .eq("id", payload.new.charmer_id)) as PostgrestResponse<{
+            name: string
+          }>
 
-            if (error) console.error(error)
+          if (error) console.error(error)
 
-            const newMessage: MessageRecord = {
-              ...(payload.new as MessageRecord),
-              charmers: charmers!.pop()!,
-            }
-
-            setMessages((messages) => [newMessage, ...messages])
+          const newMessage: MessageRecord = {
+            ...(payload.new as MessageRecord),
+            charmers: charmers!.pop()!,
           }
-        )
-        .subscribe()
 
-      setChannel(c)
-    })()
+          setMessages((messages) => [newMessage, ...messages])
+        }
+      )
+      .subscribe()
+
+    setChannel(c)
 
     return () => {
       if (channel) supabase.removeChannel(channel)
