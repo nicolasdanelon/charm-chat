@@ -35,7 +35,7 @@ function Messages() {
           )
         `
         )
-        .order("created_at")
+        .order("created_at", { ascending: false })
         .eq("channel_id", currentChannelId)
 
       if (error) console.error(error)
@@ -70,7 +70,7 @@ function Messages() {
               charmers: charmers!.pop()!,
             }
 
-            setMessages((messages) => [...messages, newMessage])
+            setMessages((messages) => [newMessage, ...messages])
           }
         )
         .subscribe()
@@ -84,7 +84,7 @@ function Messages() {
   }, [currentChannelId])
 
   return (
-    <div className="px-6 py-4 flex-1 overflow-y-scroll">
+    <div className="flex flex-col-reverse px-6 py-4 flex-1 overflow-y-scroll">
       {messages?.map((message) => (
         <Message
           content={message.content}
