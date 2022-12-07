@@ -1,7 +1,19 @@
+import debounce from "lodash.debounce"
+import { useCallback, useState } from "preact/hooks"
 import useChannelsStore from "../stores/useChannelsStore"
+import useMessagesStore from "../stores/useMessagesStore"
 
 function ChatTopBar() {
   const { currentChannelName } = useChannelsStore()
+  const { setContentFilter } = useMessagesStore()
+  const [value, setValue] = useState<string>("")
+
+  const debounceFn = useCallback(debounce(setContentFilter, 500), [])
+
+  const handleChange = (e: any) => {
+    setValue(e.currentTarget.value)
+    debounceFn(e.currentTarget.value)
+  }
 
   return (
     <div className="border-b flex px-6 py-2 items-center flex-none">
@@ -16,6 +28,8 @@ function ChatTopBar() {
             type="search"
             placeholder="Search"
             className="appearance-none border border-grey rounded-lg pl-8 pr-4 py-2"
+            value={value}
+            onChange={handleChange}
           />
           <div
             className="absolute pin-y pin-l pl-3 flex items-center justify-center"

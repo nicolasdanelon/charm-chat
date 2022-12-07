@@ -1,8 +1,8 @@
 import { PostgrestResponse, RealtimeChannel } from "@supabase/supabase-js"
 import { useEffect, useState } from "preact/hooks"
+
 import useChannelsStore from "../stores/useChannelsStore"
 import useMessagesStore from "../stores/useMessagesStore"
-
 import { supabase } from "../supabaseClient"
 import MessageRecord from "../types/message-record.type"
 
@@ -12,11 +12,12 @@ function Messages() {
   const [channel, setChannel] = useState<RealtimeChannel>()
 
   const { currentChannelId } = useChannelsStore()
-  const { messages, getMessages, addMessage } = useMessagesStore()
+  const { messages, getMessages, addMessage, contentFilter } =
+    useMessagesStore()
 
   useEffect(() => {
     if (currentChannelId) getMessages(currentChannelId)
-  }, [currentChannelId])
+  }, [currentChannelId, contentFilter])
 
   useEffect(() => {
     const c = supabase

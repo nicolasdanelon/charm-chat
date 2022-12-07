@@ -6,14 +6,20 @@ import MessagesResponse from "../types/messages-response.type"
 
 type MessagesStore = {
   messages: MessageRecord[]
-  addMessage: (message: MessageRecord) => Promise<void>
+  contentFilter: string
+  setContentFilter: (contentFilter: string) => void
+  addMessage: (message: MessageRecord) => void
   getMessages: (channelId: number) => Promise<void>
 }
 
-const useMessagesStore = create<MessagesStore>((set) => ({
+const useMessagesStore = create<MessagesStore>((set, get) => ({
   messages: [],
+  contentFilter: "*",
   addMessage: async (message: MessageRecord) => {
     set(({ messages }) => ({ messages: [message, ...messages] }))
+  },
+  setContentFilter: (contentFilter: string) => {
+    set({ contentFilter })
   },
   getMessages: async (channelId: number) => {
     set({ messages: [] })
@@ -22,6 +28,7 @@ const useMessagesStore = create<MessagesStore>((set) => ({
       .from("messages")
       .select("*, charmer:charmer_id(name)")
       .order("created_at", { ascending: false })
+      .like("content", `%${get().contentFilter ?? "*"}%`)
       .eq("channel_id", channelId)) as MessagesResponse
 
     if (error) console.error(error)
