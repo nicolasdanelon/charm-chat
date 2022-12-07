@@ -9,8 +9,8 @@ function Chats() {
   return (
     <div className="flex-1 flex flex-col bg-white overflow-hidden">
       <ChatTopBar />
-      <Messages channelId={1} />
-      <MessageComposer channelId={1} charmerId={user!.id} />
+      <Messages />
+      <MessageComposer charmerId={user!.id} />
     </div>
   )
 }
