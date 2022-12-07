@@ -1,46 +1,21 @@
 import { PostgrestResponse, RealtimeChannel } from "@supabase/supabase-js"
 import { useEffect, useState } from "preact/hooks"
 import useChannelsStore from "../stores/useChannelsStore"
+import useMessagesStore from "../stores/useMessagesStore"
 
 import { supabase } from "../supabaseClient"
+import MessageRecord from "../types/message-record.type"
 
 import Message from "./message"
 
-type MessageRecord = {
-  id: number
-  channel_id?: number | null
-  charmer_id: string
-  content: string
-  conversation_id?: number | null
-  created_at: string
-  is_read: boolean
-  charmers: { name: string }
-}
-
 function Messages() {
-  const [messages, setMessages] = useState<MessageRecord[]>([])
   const [channel, setChannel] = useState<RealtimeChannel>()
 
   const { currentChannelId } = useChannelsStore()
+  const { messages, getMessages, addMessage } = useMessagesStore()
 
   useEffect(() => {
-    ;(async () => {
-      const { data, error } = await supabase
-        .from("messages")
-        .select(
-          `
-          *,
-          charmers (
-            name
-          )
-        `
-        )
-        .order("created_at", { ascending: false })
-        .eq("channel_id", currentChannelId)
-
-      if (error) console.error(error)
-      if (data) setMessages(data)
-    })()
+    if (currentChannelId) getMessages(currentChannelId)
   }, [currentChannelId])
 
   useEffect(() => {
@@ -61,15 +36,12 @@ function Messages() {
             .eq("id", payload.new.charmer_id)) as PostgrestResponse<{
             name: string
           }>
-
           if (error) console.error(error)
 
-          const newMessage: MessageRecord = {
+          addMessage({
             ...(payload.new as MessageRecord),
-            charmers: charmers!.pop()!,
-          }
-
-          setMessages((messages) => [newMessage, ...messages])
+            charmer: charmers!.pop()!,
+          })
         }
       )
       .subscribe()
@@ -86,7 +58,7 @@ function Messages() {
       {messages?.map((message) => (
         <Message
           content={message.content}
-          name={message.charmers.name}
+          name={message.charmer.name}
           time={new Date(message.created_at)}
           key={message.id}
         />
