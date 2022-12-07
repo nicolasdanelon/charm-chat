@@ -2,6 +2,7 @@ import { h } from "preact"
 import { useEffect } from "preact/hooks"
 
 import useChannelsStore from "../stores/useChannelsStore"
+import useCharmersStore from "../stores/useCharmersStore"
 
 export default function Channels() {
   const {
@@ -11,6 +12,8 @@ export default function Channels() {
     setCurrentChannelId,
     setCurrentChannelName,
   } = useChannelsStore()
+
+  const { setSelectedCharmer } = useCharmersStore()
 
   useEffect(() => {
     getChannels()
@@ -40,8 +43,9 @@ export default function Channels() {
         >
           <button
             onClick={() => {
+              setSelectedCharmer(null)
               setCurrentChannelId(Number(id))
-              setCurrentChannelName(name)
+              setCurrentChannelName(`# ${name}`)
             }}
           >
             # {name}
