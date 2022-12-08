@@ -1,16 +1,20 @@
+import { Md5 } from "ts-md5"
+import { useMemo } from "preact/compat"
+
 type MessageProps = {
   name: string
   content: string
   time: Date
 }
 
+function returnAvatar(name) {
+  return `https://www.gravatar.com/avatar/${Md5.hashStr(name)}?d=retro&f=y`
+}
+
 function Message({ name, content, time }: MessageProps) {
   return (
     <div className="flex items-start mb-4 text-sm">
-      <img
-        src="https://randomuser.me/api/portraits/men/85.jpg"
-        className="w-10 h-10 rounded mr-3"
-      />
+      <img src={returnAvatar(name)} className="w-10 h-10 rounded mr-3" />
       <div className="flex-1 overflow-hidden">
         <div>
           <span className="font-bold capitalize">{name}</span>{" "}
