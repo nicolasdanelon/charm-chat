@@ -1,4 +1,8 @@
-import { PostgrestResponse, RealtimeChannel } from "@supabase/supabase-js"
+import {
+  PostgrestResponse,
+  RealtimeChannel,
+  RealtimePostgresChangesFilter,
+} from "@supabase/supabase-js"
 import { useEffect, useState } from "preact/hooks"
 
 import useChannelsStore from "../stores/useChannelsStore"
@@ -23,7 +27,7 @@ function Messages() {
   }, [currentChannelId, contentFilter])
 
   let channelName: string
-  let channelFilter: any
+  let channelFilter: RealtimePostgresChangesFilter<"INSERT">
 
   if (selectedCharmer) {
     channelName = `public:messages:conversation_id=eq.${selectedCharmer}`
@@ -46,20 +50,20 @@ function Messages() {
   useEffect(() => {
     const c = supabase
       .channel(channelName)
-      .on("postgres_changes", channelFilter, async (payload) => {
+      .on<MessageRecord>("postgres_changes", channelFilter, async (payload) => {
+        const { charmer_id } = payload.new
         const { data: charmers, error } = (await supabase
           .from("charmers")
           .select("name")
-          // @ts-ignore
-          .eq("id", payload.new.charmer_id)) as PostgrestResponse<{
+          .eq("id", charmer_id)) as PostgrestResponse<{
           name: string
         }>
+
         if (error) console.error(error)
 
-        addMessage({
-          ...(payload.new as MessageRecord),
-          charmer: charmers!.pop()!,
-        })
+        const charmer = charmers?.[0] ? charmers[0] : { name: "User" }
+
+        addMessage({ ...payload.new, charmer })
       })
       .subscribe()
 

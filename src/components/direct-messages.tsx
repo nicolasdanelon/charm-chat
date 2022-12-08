@@ -5,8 +5,7 @@ import useUserStore from "../stores/useUserStore"
 
 export default function DirectMessages() {
   const { setCurrentChannelId, setCurrentChannelName } = useChannelsStore()
-  const { charmers, getCharmers } = useCharmersStore()
-  const { setSelectedCharmer } = useCharmersStore()
+  const { charmers, getCharmers, setSelectedCharmer } = useCharmersStore()
   const { user } = useUserStore()
 
   useEffect(() => {
@@ -52,7 +51,7 @@ export default function DirectMessages() {
               setCurrentChannelId(null)
               setCurrentChannelName(charmer.name)
             }}
-            className="flex items-center py-1 px-4 opacity-50 w-full cursor-pointer hover:bg-teal-500 hover:opacity-100 block"
+            className="flex items-center py-1 px-4 opacity-50 w-full cursor-pointer hover:bg-teal-500 hover:opacity-100"
             key={charmer.id}
           >
             <svg
