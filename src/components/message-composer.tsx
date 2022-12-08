@@ -2,6 +2,7 @@ import { useState } from "preact/hooks"
 
 import { supabase } from "../supabaseClient"
 import useChannelsStore from "../stores/useChannelsStore"
+import useMessagesStore from "../stores/useMessagesStore"
 
 type MessageComposerType = {
   charmerId: string
@@ -10,6 +11,7 @@ type MessageComposerType = {
 function MessageComposer({ charmerId }: MessageComposerType) {
   const [content, setContent] = useState<string>("")
   const { currentChannelId } = useChannelsStore()
+  const { conversationId } = useMessagesStore()
 
   const handleChange = (event: any) => {
     setContent(event.currentTarget.value)
@@ -17,13 +19,12 @@ function MessageComposer({ charmerId }: MessageComposerType) {
 
   const handleKeyPress = async (event: { key: string }) => {
     if (event.key === "Enter" && content.trim().length) {
-      const { error } = await supabase
-        .from("messages")
-        .insert({
-          channel_id: currentChannelId,
-          charmer_id: charmerId,
-          content,
-        })
+      const { error } = await supabase.from("messages").insert({
+        conversation_id: conversationId,
+        channel_id: currentChannelId,
+        charmer_id: charmerId,
+        content,
+      })
 
       if (error) console.error(error)
 

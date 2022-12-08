@@ -1,8 +1,12 @@
 import { useEffect } from "preact/hooks"
 import useCharmersStore from "../stores/useCharmersStore"
+import useChannelsStore from "../stores/useChannelsStore"
+import useUserStore from "../stores/useUserStore"
 
-export default function DirectMessages({ userName }: { userName: string }) {
-  const { charmers, getCharmers } = useCharmersStore()
+export default function DirectMessages() {
+  const { setCurrentChannelId, setCurrentChannelName } = useChannelsStore()
+  const { charmers, getCharmers, setSelectedCharmer } = useCharmersStore()
+  const { user } = useUserStore()
 
   useEffect(() => {
     ;(async () => {
@@ -24,7 +28,7 @@ export default function DirectMessages({ userName }: { userName: string }) {
           </svg>
         </div>
       </div>
-      <div className="flex items-center mb-3 px-4">
+      <div className="flex items-center mb-1 px-4 cursor-default">
         <svg
           className="h-2 w-2 fill-current text-green mr-2"
           viewBox="0 0 20 20"
@@ -32,17 +36,22 @@ export default function DirectMessages({ userName }: { userName: string }) {
           <circle cx="10" cy="10" r="10" />
         </svg>
         <span className="text-white opacity-75 capitalize">
-          {userName} <span className="text-grey text-sm">(you)</span>
+          {user!.name} <span className="text-grey text-sm">(you)</span>
         </span>
       </div>
 
-      {charmers.map((charmer, index) => {
-        const margin = `mb-${charmers.length === index + 1 ? 6 : 3}`
+      {charmers.map((charmer) => {
         const color = `text-${charmer.is_online ? "green" : "white"}`
 
+        if (charmer.id === user!.id) return null
         return (
-          <div
-            className={`flex items-center py-1 px-4 ${margin} opacity-50 cursor-pointer hover:bg-teal-500 hover:opacity-100`}
+          <button
+            onClick={() => {
+              setSelectedCharmer(charmer.id)
+              setCurrentChannelId(null)
+              setCurrentChannelName(charmer.name)
+            }}
+            className="flex items-center py-1 px-4 opacity-50 w-full cursor-pointer hover:bg-teal-500 hover:opacity-100"
             key={charmer.id}
           >
             <svg
@@ -52,7 +61,7 @@ export default function DirectMessages({ userName }: { userName: string }) {
               <circle cx="11" cy="11" r="9" fill="none" stroke-width="3" />
             </svg>
             <span className="text-white capitalize">{charmer.name}</span>
-          </div>
+          </button>
         )
       })}
     </div>

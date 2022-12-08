@@ -15,12 +15,16 @@ function ChatTopBar() {
     debounceFn(e.currentTarget.value)
   }
 
+  let classes = "text-grey-darkest mb-1 font-bold"
+
+  if (currentChannelName.indexOf("#") < 0) {
+    classes = classes + " capitalize"
+  }
+
   return (
     <div className="border-b flex px-6 py-2 items-center flex-none">
       <div className="flex flex-col">
-        <h3 className="text-grey-darkest mb-1 font-extrabold">
-          # {currentChannelName}
-        </h3>
+        <h3 className={classes}>{currentChannelName}</h3>
       </div>
       <div className="ml-auto hidden md:block">
         <div className="relative">

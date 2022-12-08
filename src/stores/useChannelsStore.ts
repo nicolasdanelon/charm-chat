@@ -13,7 +13,7 @@ type ChannelsStore = {
   currentChannelName: string
   clearChannels: () => void
   getChannels: () => Promise<void>
-  setCurrentChannelId: (c: number) => void
+  setCurrentChannelId: (c: number | null) => void
   setCurrentChannelName: (n: string) => void
 }
 
@@ -32,7 +32,7 @@ const useChannelsStore = create<ChannelsStore>()(
         if (error) console.error(error)
         if (channels) set({ channels })
       },
-      setCurrentChannelId: (currentChannelId: number) =>
+      setCurrentChannelId: (currentChannelId: number | null) =>
         set({ currentChannelId }),
       setCurrentChannelName: (currentChannelName: string) =>
         set({ currentChannelName }),
