@@ -11,8 +11,8 @@ export type Charmer = {
 type ChannelsStore = {
   charmers: Charmer[]
   clearCharmers: () => void
-  selectedCharmer: number | null
-  setSelectedCharmer: (id: number | null) => void
+  selectedCharmer: string | null
+  setSelectedCharmer: (id: string | null) => void
   getCharmers: () => Promise<void>
 }
 
@@ -21,10 +21,8 @@ const useCharmersStore = create<ChannelsStore>()(
     (set) => ({
       charmers: [],
       selectedCharmer: null,
-      setSelectedCharmer: (selectedCharmer: number | null) =>
-        set({
-          selectedCharmer,
-        }),
+      setSelectedCharmer: (selectedCharmer: string | null) =>
+        set({ selectedCharmer }),
       clearCharmers: () => set({ charmers: [] }),
       getCharmers: async () => {
         const { data: charmers, error } = await supabase

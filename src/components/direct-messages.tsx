@@ -47,7 +47,7 @@ export default function DirectMessages() {
         return (
           <button
             onClick={() => {
-              setSelectedCharmer(Number(charmer.id))
+              setSelectedCharmer(charmer.id)
               setCurrentChannelId(null)
               setCurrentChannelName(charmer.name)
             }}

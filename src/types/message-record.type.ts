@@ -6,7 +6,8 @@ type MessageRecord = {
   conversation_id?: number | null
   created_at: string
   is_read: boolean
-  charmer: { name: string }
+  charmer?: { name: string }
+  name?: string
 }
 
 export default MessageRecord
