@@ -5,7 +5,8 @@ import useUserStore from "../stores/useUserStore"
 
 export default function DirectMessages() {
   const { setCurrentChannelId, setCurrentChannelName } = useChannelsStore()
-  const { charmers, getCharmers, setSelectedCharmer } = useCharmersStore()
+  const { charmers, getCharmers, setSelectedCharmer, selectedCharmer } =
+    useCharmersStore()
   const { user } = useUserStore()
 
   useEffect(() => {
@@ -43,7 +44,16 @@ export default function DirectMessages() {
       {charmers.map((charmer) => {
         const color = `text-${charmer.is_online ? "green" : "white"}`
 
+        let itemClass =
+          "flex items-center py-1 px-4 opacity-50 w-full " +
+          "cursor-pointer hover:bg-teal-500 hover:opacity-100"
+
+        if (selectedCharmer === charmer.id) {
+          itemClass = itemClass + " bg-teal-500 opacity-100"
+        }
+
         if (charmer.id === user!.id) return null
+
         return (
           <button
             onClick={() => {
@@ -51,7 +61,7 @@ export default function DirectMessages() {
               setCurrentChannelId(null)
               setCurrentChannelName(charmer.name)
             }}
-            className="flex items-center py-1 px-4 opacity-50 w-full cursor-pointer hover:bg-teal-500 hover:opacity-100"
+            className={itemClass}
             key={charmer.id}
           >
             <svg
