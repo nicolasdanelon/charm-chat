@@ -31,7 +31,7 @@ function Messages() {
 
   useEffect(() => {
     if (selectedCharmer) getConversationMessages(user!.id, selectedCharmer)
-  }, [selectedCharmer])
+  }, [selectedCharmer, contentFilter])
 
   useEffect(() => {
     if (currentChannelId) getChannelMessages(currentChannelId)
