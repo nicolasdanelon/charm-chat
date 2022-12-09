@@ -7,12 +7,11 @@ type MessageProps = {
   time: Date
 }
 
-function returnAvatar(name: string): string {
-  return `https://www.gravatar.com/avatar/${Md5.hashStr(name)}?d=retro&f=y`
-}
-
 function Message({ name, content, time }: MessageProps) {
-  const avatar = useMemo(() => returnAvatar(name), [name])
+  const avatar = useMemo(
+    () => `https://www.gravatar.com/avatar/${Md5.hashStr(name)}?d=retro&f=y`,
+    [name]
+  )
 
   return (
     <div className="flex items-start mb-4 text-sm">
