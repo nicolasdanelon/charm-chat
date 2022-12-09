@@ -16,7 +16,7 @@ type MessagesStore = {
 
 const useMessagesStore = create<MessagesStore>((set, get) => ({
   messages: [],
-  contentFilter: "*",
+  contentFilter: "",
   conversationId: null,
   addMessage: async (message: MessageRecord) => {
     set(({ messages }) => ({ messages: [message, ...messages] }))
@@ -31,7 +31,7 @@ const useMessagesStore = create<MessagesStore>((set, get) => ({
       .from("messages")
       .select("*, charmer:charmer_id(name)")
       .order("created_at", { ascending: false })
-      .like("content", `%${get().contentFilter ?? "*"}%`)
+      .like("content", `%${get().contentFilter}%`)
       .eq("channel_id", id)) as MessagesResponse
 
     if (error) console.error(error)
@@ -42,7 +42,7 @@ const useMessagesStore = create<MessagesStore>((set, get) => ({
 
     let { data: messages, error } = (await supabase.rpc(
       "get_conversation_messages",
-      { id1: userId, id2: charmerId }
+      { id1: userId, id2: charmerId, filter: `%${get().contentFilter}%` }
     )) as MessagesResponse
 
     if (error) console.error(error)
