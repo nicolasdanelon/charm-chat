@@ -44,14 +44,6 @@ export default function DirectMessages() {
       {charmers.map((charmer) => {
         const color = `text-${charmer.is_online ? "green" : "white"}`
 
-        let itemClass =
-          "flex items-center py-1 px-4 opacity-50 w-full " +
-          "cursor-pointer hover:bg-teal-500 hover:opacity-100"
-
-        if (selectedCharmer === charmer.id) {
-          itemClass = itemClass + " bg-teal-500 opacity-100"
-        }
-
         if (charmer.id === user!.id) return null
 
         return (
@@ -61,7 +53,11 @@ export default function DirectMessages() {
               setCurrentChannelId(null)
               setCurrentChannelName(charmer.name)
             }}
-            className={itemClass}
+            className={`
+              flex items-center py-1 px-4 opacity-50 w-full
+              cursor-pointer hover:bg-teal-500 hover:opacity-100
+              ${selectedCharmer === charmer.id && "bg-teal-500 opacity-100"}
+            `}
             key={charmer.id}
           >
             <svg
