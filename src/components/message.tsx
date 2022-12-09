@@ -1,3 +1,6 @@
+import { Md5 } from "ts-md5"
+import { useMemo } from "preact/compat"
+
 type MessageProps = {
   name: string
   content: string
@@ -5,12 +8,14 @@ type MessageProps = {
 }
 
 function Message({ name, content, time }: MessageProps) {
+  const avatar = useMemo(
+    () => `https://www.gravatar.com/avatar/${Md5.hashStr(name)}?d=retro&f=y`,
+    [name]
+  )
+
   return (
     <div className="flex items-start mb-4 text-sm">
-      <img
-        src="https://randomuser.me/api/portraits/men/85.jpg"
-        className="w-10 h-10 rounded mr-3"
-      />
+      <img src={avatar} className="w-10 h-10 rounded mr-3" />
       <div className="flex-1 overflow-hidden">
         <div>
           <span className="font-bold capitalize">{name}</span>{" "}
