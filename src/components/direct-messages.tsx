@@ -89,7 +89,7 @@ export default function DirectMessages() {
             }}
             className={`
               flex items-center py-1 px-4 w-full
-              cursor-pointer
+              cursor-pointer charmer-item
               ${selectedCharmer === charmer.id && "bg-teal-500"}
             `}
             key={charmer.id}
@@ -103,7 +103,13 @@ export default function DirectMessages() {
                 stroke-width="3"
               />
             </svg>
-            <span className="text-white capitalize opacity-50 hover:opacity-100">
+            <span
+              className={`text-white capitalize ${
+                selectedCharmer === charmer.id
+                  ? "opacity-100 hover:opacity-80"
+                  : "opacity-50 hover:opacity-100"
+              } `}
+            >
               {charmer.name}
             </span>
           </button>
