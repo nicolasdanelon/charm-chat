@@ -54,9 +54,9 @@ export default function DirectMessages() {
               setCurrentChannelName(charmer.name)
             }}
             className={`
-              flex items-center py-1 px-4 opacity-50 w-full
-              cursor-pointer hover:bg-teal-500 hover:opacity-100
-              ${selectedCharmer === charmer.id && "bg-teal-500 opacity-100"}
+              flex items-center py-1 px-4 w-full
+              cursor-pointer
+              ${selectedCharmer === charmer.id && "bg-teal-500"}
             `}
             key={charmer.id}
           >
@@ -64,9 +64,17 @@ export default function DirectMessages() {
               className={`h-2 w-2 stroke-current ${color} mr-2`}
               viewBox="0 0 22 22"
             >
-              <circle cx="11" cy="11" r="9" fill="none" stroke-width="3" />
+              <circle
+                cx="10"
+                cy="10"
+                r="10"
+                fill={`${charmer.is_online ? "green" : "none"}`}
+                stroke-width="3"
+              />
             </svg>
-            <span className="text-white capitalize">{charmer.name}</span>
+            <span className="text-white capitalize opacity-50 hover:opacity-100">
+              {charmer.name}
+            </span>
           </button>
         )
       })}
