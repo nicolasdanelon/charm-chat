@@ -42,7 +42,9 @@ export default function DirectMessages() {
       </div>
 
       {charmers.map((charmer) => {
-        const color = `text-${charmer.is_online ? "green" : "white"}`
+        const active = charmer.is_online
+          ? "text-green fill-current"
+          : "text-white stroke-current"
 
         if (charmer.id === user!.id) return null
 
@@ -60,15 +62,12 @@ export default function DirectMessages() {
             `}
             key={charmer.id}
           >
-            <svg
-              className={`h-2 w-2 stroke-current ${color} mr-2`}
-              viewBox="0 0 22 22"
-            >
+            <svg className={`h-2 w-2 ${active} mr-2`} viewBox="-2 -2 23 23">
               <circle
                 cx="10"
                 cy="10"
                 r="10"
-                fill={`${charmer.is_online ? "green" : "none"}`}
+                fill={`${charmer.is_online ? "" : "none"}`}
                 stroke-width="3"
               />
             </svg>
