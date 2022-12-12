@@ -1,18 +1,50 @@
-import { useEffect } from "preact/hooks"
+import { RealtimeChannel } from "@supabase/supabase-js"
+import { useEffect, useState } from "preact/hooks"
+
 import useCharmersStore from "../stores/useCharmersStore"
 import useChannelsStore from "../stores/useChannelsStore"
 import useUserStore from "../stores/useUserStore"
+import { supabase } from "../supabaseClient"
+import CharmerRecord from "../types/charmer-record.type"
 
 export default function DirectMessages() {
   const { setCurrentChannelId, setCurrentChannelName } = useChannelsStore()
-  const { charmers, getCharmers, setSelectedCharmer, selectedCharmer } =
-    useCharmersStore()
+  const {
+    charmers,
+    getCharmers,
+    setSelectedCharmer,
+    selectedCharmer,
+    setCharmerOnlineStatus,
+  } = useCharmersStore()
   const { user } = useUserStore()
+  const [channel, setChannel] = useState<RealtimeChannel>()
 
   useEffect(() => {
     ;(async () => {
       await getCharmers()
     })()
+
+    const c = supabase
+      .channel("public:charmers")
+      .on<CharmerRecord>(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "charmers",
+        },
+        async (payload) => {
+          const { id, is_online } = payload.new
+          setCharmerOnlineStatus(id, is_online)
+        }
+      )
+      .subscribe()
+
+    setChannel(c)
+
+    return () => {
+      if (channel) supabase.removeChannel(channel)
+    }
   }, [])
 
   return (
