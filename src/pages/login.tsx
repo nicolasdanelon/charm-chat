@@ -112,6 +112,27 @@ function Login() {
     }
   }, [error])
 
+  const loginWithGoogleAuth = async () => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+    })
+
+    if (error) {
+      console.table(error)
+    }
+
+    if (data) {
+      console.log(data)
+      // @ts-ignore
+      if (data.session && data.user) {
+        const name = email?.toLowerCase().split("@")[0].split(".").join(" ")
+        // @ts-ignore
+        setUser({ id: data.user.id, email, name })
+        navigate("/app")
+      }
+    }
+  }
+
   return (
     <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
       {formData.error && <Toast message={error} />}
@@ -210,6 +231,7 @@ function Login() {
                     role="button"
                     data-mdb-ripple="true"
                     data-mdb-ripple-color="light"
+                    onClick={loginWithGoogleAuth}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

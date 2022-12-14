@@ -3,17 +3,22 @@ import { h } from "preact"
 import Channels from "./channels"
 import DirectMessages from "./direct-messages"
 import useUserStore from "../stores/useUserStore"
+import { Md5 } from "ts-md5"
 
 function Sidebar() {
   const { user } = useUserStore()
   const userName = user!.name
+
+  const avatar = `https://www.gravatar.com/avatar/${Md5.hashStr(
+    "230498"
+  )}?d=retro&f=y`
 
   return (
     <>
       <div className="bg-indigo-darkest text-purple-lighter flex-none p-4 hidden md:block">
         <div className="cursor-pointer mb-4">
           <div className="bg-white h-12 w-12 flex items-center justify-center text-black text-2xl font-semibold rounded-lg mb-1 overflow-hidden">
-            <img src="https://twitter.com/tailwindcss/profile_image" alt="" />
+            <img src={avatar} alt="" />
           </div>
           <div className="text-center text-white opacity-50 text-sm">
             &#8984;1
