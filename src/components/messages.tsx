@@ -38,6 +38,7 @@ function Messages() {
       if (selectedCharmer) {
         setLoading(true)
         await getConversationMessages(user!.id, selectedCharmer)
+        setLoading(false)
       }
     })()
   }, [selectedCharmer, contentFilter])
@@ -47,6 +48,7 @@ function Messages() {
       if (currentChannelId) {
         setLoading(true)
         await getChannelMessages(currentChannelId)
+        setLoading(false)
       }
     })()
   }, [currentChannelId, contentFilter])
