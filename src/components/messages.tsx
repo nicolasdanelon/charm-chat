@@ -4,6 +4,7 @@ import {
   RealtimePostgresChangesFilter,
 } from "@supabase/supabase-js"
 import { useEffect, useState } from "preact/hooks"
+import Lottie from "lottie-react"
 
 import useChannelsStore from "../stores/useChannelsStore"
 import useMessagesStore from "../stores/useMessagesStore"
@@ -13,9 +14,12 @@ import MessageRecord from "../types/message-record.type"
 import Message from "./message"
 import useCharmersStore from "../stores/useCharmersStore"
 import useUserStore from "../stores/useUserStore"
+import loadingAnimation from "../assets/loading-animation.json"
+import nothingAnimation from "../assets/nothing-animation.json"
 
 function Messages() {
   const [channel, setChannel] = useState<RealtimeChannel>()
+  const [loading, setLoading] = useState<boolean>(true)
 
   const { user } = useUserStore()
   const { currentChannelId } = useChannelsStore()
@@ -30,11 +34,21 @@ function Messages() {
   const { selectedCharmer } = useCharmersStore()
 
   useEffect(() => {
-    if (selectedCharmer) getConversationMessages(user!.id, selectedCharmer)
+    ;(async () => {
+      if (selectedCharmer) {
+        setLoading(true)
+        await getConversationMessages(user!.id, selectedCharmer)
+      }
+    })()
   }, [selectedCharmer, contentFilter])
 
   useEffect(() => {
-    if (currentChannelId) getChannelMessages(currentChannelId)
+    ;(async () => {
+      if (currentChannelId) {
+        setLoading(true)
+        await getChannelMessages(currentChannelId)
+      }
+    })()
   }, [currentChannelId, contentFilter])
 
   let channelName: string
@@ -74,16 +88,52 @@ function Messages() {
 
         const charmer = charmers?.[0] ? charmers[0] : { name: "User" }
 
+        setLoading(false)
+
         addMessage({ ...payload.new, charmer })
       })
       .subscribe()
 
     setChannel(c)
 
-    return () => {
-      if (channel) supabase.removeChannel(channel)
+    return async () => {
+      if (channel) {
+        setLoading(false)
+        await supabase.removeChannel(channel)
+      }
     }
   }, [currentChannelId, conversationId])
+
+  if (loading && messages.length === 0) {
+    return (
+      <div className="flex flex-col px-6 py-4 flex-1">
+        <div className="grid place-items-center">
+          <Lottie
+            loop={true}
+            autoplay={true}
+            animationData={loadingAnimation}
+          />
+          <em>loading...</em>
+        </div>
+      </div>
+    )
+  }
+
+  if (!loading && messages.length === 0) {
+    return (
+      <div className="flex px-6 py-4 flex-1 items-center justify-center h-screen">
+        <div className="w-500 h-500 text-center">
+          <Lottie
+            loop={true}
+            autoplay={true}
+            style={{ height: 500, width: 500 }}
+            animationData={nothingAnimation}
+          />
+          <em>no messages...</em>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="flex flex-col-reverse px-6 py-4 flex-1 overflow-y-scroll">
