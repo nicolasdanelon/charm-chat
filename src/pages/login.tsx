@@ -15,6 +15,8 @@ type FormData = {
   show: boolean
 }
 
+const oauthRedirectUrl = import.meta.env.VITE_OAUTH_REDIRECT_URL
+
 function Login() {
   // https://tailwind-elements.com/docs/standard/components/login-form/
   const [formData, setFormData] = useState<FormData>({
@@ -115,22 +117,12 @@ function Login() {
   const loginWithGoogleAuth = async () => {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
+      options: { redirectTo: oauthRedirectUrl },
     })
 
-    if (error) {
-      console.table(error)
-    }
+    if (error) console.error(error)
 
-    if (data) {
-      console.log(data)
-      // @ts-ignore
-      if (data.session && data.user) {
-        const name = email?.toLowerCase().split("@")[0].split(".").join(" ")
-        // @ts-ignore
-        setUser({ id: data.user.id, email, name })
-        navigate("/app")
-      }
-    }
+    console.log(data ?? "no login data")
   }
 
   return (
