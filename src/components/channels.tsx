@@ -1,8 +1,8 @@
-import { h } from "preact"
-import { useEffect } from "preact/hooks"
+import { useEffect, useState } from "preact/hooks"
 
 import useChannelsStore from "../stores/useChannelsStore"
 import useCharmersStore from "../stores/useCharmersStore"
+import ChannelInput from "./channel-input"
 
 export default function Channels() {
   const {
@@ -16,24 +16,33 @@ export default function Channels() {
   const { setSelectedCharmer } = useCharmersStore()
 
   useEffect(() => {
-    getChannels()
+    ;(async () => {
+      await getChannels()
+    })()
   }, [])
+
+  const [showAddChannel, setShowAddChannel] = useState<boolean>(false)
+
+  const toggleShowAddChannel = () => {
+    setShowAddChannel(!showAddChannel)
+  }
 
   return (
     <div className="mb-8">
       <div className="px-4 mb-2 text-white flex justify-between items-center">
         <div className="opacity-75 cursor-default">Channels</div>
-        <div>
+        <button onClick={toggleShowAddChannel}>
           <svg
-            className="fill-current h-4 w-4 opacity-50 cursor-pointer"
+            className={`fill-current h-4 w-4 opacity-50 cursor-pointer transition-[rotate_0.5s_ease-in-out] ${
+              showAddChannel ? " rotate-45" : ""
+            }`}
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
           >
             <path d="M11 9h4v2h-4v4H9v-4H5V9h4V5h2v4zm-1 11a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16z" />
           </svg>
-        </div>
+        </button>
       </div>
-
       {channels.map(({ id, name }) => (
         <div
           key={id}
@@ -52,6 +61,12 @@ export default function Channels() {
           </button>
         </div>
       ))}
+      {showAddChannel && (
+        <ChannelInput
+          isVisible={showAddChannel}
+          setIsVisible={setShowAddChannel}
+        />
+      )}
     </div>
   )
 }
