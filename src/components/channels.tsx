@@ -1,16 +1,23 @@
+import { PostgrestResponse, RealtimeChannel } from "@supabase/supabase-js"
 import { useEffect, useState } from "preact/hooks"
 
 import useChannelsStore from "../stores/useChannelsStore"
 import useCharmersStore from "../stores/useCharmersStore"
+import useUserStore from "../stores/useUserStore"
+import { supabase } from "../supabaseClient"
+import ChannelsCharmersRecord from "../types/channel-record.type"
 import ChannelInput from "./channel-input"
 
 export default function Channels() {
+  const { user } = useUserStore()
+
   const {
     channels,
     getChannels,
     currentChannelId,
     setCurrentChannelId,
     setCurrentChannelName,
+    addChannel
   } = useChannelsStore()
 
   const { setSelectedCharmer } = useCharmersStore()
@@ -26,6 +33,51 @@ export default function Channels() {
   const toggleShowAddChannel = () => {
     setShowAddChannel(!showAddChannel)
   }
+
+  const [subChannel, setSubChannel] = useState<RealtimeChannel>()
+
+  useEffect(() => {
+    const c = supabase
+      .channel("public:channels_charmers")
+      .on<ChannelsCharmersRecord>("postgres_changes",
+      {
+        event: "INSERT",
+        schema: "public",
+        table: "channels_charmers",
+        filter: `charmer_id=eq.${user?.id}`,
+      },
+      async (payload) => {
+        console.log(payload)
+        const { channel_id } = payload.new
+        const { data: channels, error } = (await supabase
+          .from("channels")
+          .select("id,name")
+          .eq("id", channel_id )) as PostgrestResponse<{
+          id: number;
+          name: string
+        }>
+
+        if (error) console.error(error)
+
+        const channel = channels?.[0] ? channels[0] : { id: 0, name: "Channel" }
+
+        console.log('da channel', channel)
+
+        addChannel({ id: channel.id, name: channel.name})
+        setSelectedCharmer(null)
+        setCurrentChannelName(`# ${channel.name}`)
+        setCurrentChannelId(channel.id)
+      })
+      .subscribe()
+
+    setSubChannel(c)
+
+    return async () => {
+      if (subChannel) {
+        await supabase.removeChannel(subChannel)
+      }
+    }
+  }, [user])
 
   return (
     <div className="mb-8">

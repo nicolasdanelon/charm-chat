@@ -3,12 +3,13 @@ import { persist } from "zustand/middleware"
 import { supabase } from "../supabaseClient"
 
 export type Channel = {
-  id: string
+  id: number
   name: string
 }
 
 type ChannelsStore = {
   channels: Channel[]
+  addChannel: (c: Channel) => void
   currentChannelId: number | null
   currentChannelName: string
   clearChannels: () => void
@@ -21,6 +22,7 @@ const useChannelsStore = create<ChannelsStore>()(
   persist(
     (set) => ({
       channels: [],
+      addChannel: (c: Channel) => set(({ channels }) => ({ channels: [...channels, c] })),
       clearChannels: () => set({ channels: [] }),
       currentChannelId: 1,
       currentChannelName: "",
