@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.charmer-item.bg-teal-500 svg {
+  color: white !important;
+}
+
 .bg-indigo-darkest {
   background-color: #191e38;
 }
