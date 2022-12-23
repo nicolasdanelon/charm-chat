@@ -1,100 +1,39 @@
-import { PostgrestResponse, RealtimeChannel } from "@supabase/supabase-js"
-import { useEffect, useState } from "preact/hooks"
+import { h } from "preact"
+import { useEffect } from "preact/hooks"
 
 import useChannelsStore from "../stores/useChannelsStore"
 import useCharmersStore from "../stores/useCharmersStore"
-import useUserStore from "../stores/useUserStore"
-import { supabase } from "../supabaseClient"
-import ChannelsCharmersRecord from "../types/channel-record.type"
-import ChannelInput from "./channel-input"
 
 export default function Channels() {
-  const { user } = useUserStore()
-
   const {
     channels,
     getChannels,
     currentChannelId,
     setCurrentChannelId,
     setCurrentChannelName,
-    addChannel
   } = useChannelsStore()
 
   const { setSelectedCharmer } = useCharmersStore()
 
   useEffect(() => {
-    ;(async () => {
-      await getChannels()
-    })()
+    getChannels()
   }, [])
-
-  const [showAddChannel, setShowAddChannel] = useState<boolean>(false)
-
-  const toggleShowAddChannel = () => {
-    setShowAddChannel(!showAddChannel)
-  }
-
-  const [subChannel, setSubChannel] = useState<RealtimeChannel>()
-
-  useEffect(() => {
-    const c = supabase
-      .channel("public:channels_charmers")
-      .on<ChannelsCharmersRecord>("postgres_changes",
-      {
-        event: "INSERT",
-        schema: "public",
-        table: "channels_charmers",
-        filter: `charmer_id=eq.${user?.id}`,
-      },
-      async (payload) => {
-        console.log(payload)
-        const { channel_id } = payload.new
-        const { data: channels, error } = (await supabase
-          .from("channels")
-          .select("id,name")
-          .eq("id", channel_id )) as PostgrestResponse<{
-          id: number;
-          name: string
-        }>
-
-        if (error) console.error(error)
-
-        const channel = channels?.[0] ? channels[0] : { id: 0, name: "Channel" }
-
-        console.log('da channel', channel)
-
-        addChannel({ id: channel.id, name: channel.name})
-        setSelectedCharmer(null)
-        setCurrentChannelName(`# ${channel.name}`)
-        setCurrentChannelId(channel.id)
-      })
-      .subscribe()
-
-    setSubChannel(c)
-
-    return async () => {
-      if (subChannel) {
-        await supabase.removeChannel(subChannel)
-      }
-    }
-  }, [user])
 
   return (
     <div className="mb-8">
       <div className="px-4 mb-2 text-white flex justify-between items-center">
         <div className="opacity-75 cursor-default">Channels</div>
-        <button onClick={toggleShowAddChannel}>
+        <div>
           <svg
-            className={`fill-current h-4 w-4 opacity-50 cursor-pointer transition-[rotate_0.5s_ease-in-out] ${
-              showAddChannel ? " rotate-45" : ""
-            }`}
+            className="fill-current h-4 w-4 opacity-50 cursor-pointer"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
           >
             <path d="M11 9h4v2h-4v4H9v-4H5V9h4V5h2v4zm-1 11a10 10 0 1 1 0-20 10 10 0 0 1 0 20zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16z" />
           </svg>
-        </button>
+        </div>
       </div>
+
       {channels.map(({ id, name }) => (
         <div
           key={id}
@@ -113,12 +52,6 @@ export default function Channels() {
           </button>
         </div>
       ))}
-      {showAddChannel && (
-        <ChannelInput
-          isVisible={showAddChannel}
-          setIsVisible={setShowAddChannel}
-        />
-      )}
     </div>
   )
 }
