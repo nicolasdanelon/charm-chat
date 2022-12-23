@@ -9,7 +9,7 @@ function Sidebar() {
   const userName = user!.name
 
   return (
-    <div className="bg-indigo-darker text-purple-lighter flex-none w-64 pb-6 hidden md:block">
+    <div className="max-h-screen overflow-auto bg-indigo-darker text-purple-lighter flex-none w-64 pb-6 hidden md:block">
       <div className="text-white mb-2 mt-3 px-4 flex justify-between">
         <div className="flex-auto">
           <h1 className="font-semibold text-xl leading-tight mb-1 truncate cursor-default">
