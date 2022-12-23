@@ -19,11 +19,16 @@ function MessageComposer({ charmerId }: MessageComposerType) {
 
   const submitMessage = async () => {
     if (content.match(/^\/.+/g)) {
-      const [spell, arg] = content.split(' ')
+      const [spell, arg] = content.split(" ")
 
-      // TODO: invite someone (only if @conjure.co.uk)
-      if (spell == '/invite' && arg.endsWith("@conjure.co.uk")) {
-        console.log('invite', arg)
+      if (spell == "/invite" && arg.endsWith("@conjure.co.uk")) {
+        let { data, error } = await supabase.rpc("add_charmer_to_channel", {
+          channel_id: currentChannelId,
+          charmer_email: arg,
+        })
+
+        if (error) console.error(error)
+        else console.log(data)
       }
 
       return false
